@@ -1,0 +1,203 @@
+#!/bin/bash
+
+# Function to display the main menu
+display_main_menu() {
+    echo "File Management Tool"
+    echo "1. File Operations"
+    echo "2. File Search"
+    echo "3. System Monitoring"
+    echo "4. Exit"
+}
+
+# Function to display the file operations menu
+display_file_operations_menu() {
+    echo "File Operations"
+    echo "1. Create File"
+    echo "2. Create Directory"
+    echo "3. Copy File"
+    echo "4. Move File"
+    echo "5. Rename File"
+    echo "6. Delete File"
+    echo "7. Delete Directory"
+    echo "8. Back to Main Menu"
+}
+
+# Function to create a file
+create_file() {
+    echo "Enter the name of the file to create:"
+    read filename
+    touch "$filename"
+    echo "File $filename created successfully."
+}
+
+# Function to create a directory
+create_directory() {
+    echo "Enter the name of the directory to create:"
+    read dirname
+    mkdir "$dirname"
+    echo "Directory $dirname created successfully."
+}
+
+# Function to copy a file
+copy_file() {
+    echo "Enter the name of the source file:"
+    read source_file
+    echo "Enter the destination directory:"
+    read destination_dir
+    cp "$source_file" "$destination_dir"
+    echo "File $source_file copied to $destination_dir successfully."
+}
+
+# Function to move a file
+move_file() {
+    echo "Enter the name of the source file:"
+    read source_file
+    echo "Enter the destination directory:"
+    read destination_dir
+    mv "$source_file" "$destination_dir"
+    echo "File $source_file moved to $destination_dir successfully."
+}
+
+# Function to rename a file
+rename_file() {
+    echo "Enter the name of the file to rename:"
+    read old_name
+    echo "Enter the new name:"
+    read new_name
+    mv "$old_name" "$new_name"
+    echo "File $old_name renamed to $new_name successfully."
+}
+
+# Function to delete a file
+delete_file() {
+    echo "Enter the name of the file to delete:"
+    read filename
+    rm "$filename"
+    echo "File $filename deleted successfully."
+}
+
+# Function to delete a directory
+delete_directory() {
+    echo "Enter the name of the directory to delete:"
+    read dirname
+    rm -r "$dirname"
+    echo "Directory $dirname deleted successfully."
+}
+
+# Function to display the file search menu
+display_file_search_menu() {
+    echo "File Search"
+    echo "1. Search by Name"
+    echo "2. Search by Type"
+    echo "3. Search by Size"
+    echo "4. Search by Modification Date"
+    echo "5. Back to Main Menu"
+}
+
+# Function to search for files based on specified criteria
+search_files() {
+    echo "Choose the search criteria:"
+    read -p "Enter your choice: " search_criteria
+    case $search_criteria in
+        1) echo "Enter the name of the file to search:"; read file_name; find . -type f -name "$file_name";;
+        2) echo "Enter the type of the file to search:"; read file_type; find . -type f -name "*.$file_type";;
+        3) echo "Enter the size of the file to search (in bytes):"; read file_size; find . -type f -size +$file_size;;
+        4) echo "Enter the modification date of the file to search (e.g., YYYY-MM-DD):"; read modification_date; find . -type f -newermt "$modification_date";;
+        *) echo "Invalid choice. Please enter a valid option.";;
+    esac
+}
+
+# Function to display the system monitoring menu
+display_system_monitoring_menu() {
+    echo "System Monitoring"
+    echo "1. System Information"
+    echo "2. CPU Usage Monitoring"
+    echo "3. Memory Usage Monitoring"
+    echo "4. Disk Space Monitoring"
+    echo "5. Back to Main Menu"
+}
+
+# Function to display system information
+display_system_information() {
+    echo "System Information"
+    echo "Operating System: $(uname -s)"
+    echo "Hostname: $(hostname)"
+    echo "Uptime: $(uptime)"
+    echo "Current Date/Time: $(date)"
+}
+
+# Function to display CPU usage monitoring information
+display_cpu_usage() {
+    echo "CPU Usage Monitoring"
+    echo "Current CPU Usage: $(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')%"
+}
+
+# Function to display memory usage monitoring information
+display_memory_usage() {
+    echo "Memory Usage Monitoring"
+    free -m
+}
+
+# Function to display disk space monitoring information
+display_disk_space() {
+    echo "Disk Space Monitoring"
+    df -h
+}
+
+# Main function
+main() {
+    while true; do
+        display_main_menu
+        read -p "Enter your choice: " main_choice
+        case $main_choice in
+            1) 
+                while true; do
+                    display_file_operations_menu
+                    read -p "Enter your choice: " file_operations_choice
+                    case $file_operations_choice in
+                        1) create_file ;;
+                        2) create_directory ;;
+                        3) copy_file ;;
+                        4) move_file ;;
+                        5) rename_file ;;
+                        6) delete_file ;;
+                        7) delete_directory ;;
+                        8) break ;;
+                        *) echo "Invalid choice. Please enter a valid option." ;;
+                    esac
+                done
+                ;;
+            2) 
+                while true; do
+                    display_file_search_menu
+                    read -p "Enter your choice: " file_search_choice
+                    case $file_search_choice in
+                        1|2|3|4) search_files ;;
+                        5) break ;;
+                        *) echo "Invalid choice. Please enter a valid option." ;;
+                    esac
+                done
+                ;;
+            3) 
+                while true; do
+                    display_system_monitoring_menu
+                    read -p "Enter your choice: " system_monitoring_choice
+                    case $system_monitoring_choice in
+                        1) display_system_information ;;
+                        2) display_cpu_usage ;;
+                        3) display_memory_usage ;;
+                        4) display_disk_space ;;
+                        5) break ;;
+                        *) echo "Invalid choice. Please enter a valid option." ;;
+                    esac
+                done
+                ;;
+            4) echo "Exiting..."; exit ;;
+            *) echo "Invalid choice. Please enter a valid option." ;;
+        esac
+    done
+}
+
+# Call the main function
+main
+
