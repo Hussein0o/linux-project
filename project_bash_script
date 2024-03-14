@@ -6,7 +6,8 @@ display_main_menu() {
     echo "1. File Operations"
     echo "2. File Search"
     echo "3. System Monitoring"
-    echo "4. Exit"
+    echo "4. Permissions Management"
+    echo "5. Exit"
 }
 
 # Function to display the file operations menu
@@ -143,6 +144,33 @@ display_disk_space() {
     echo "Disk Space Monitoring"
     df -h
 }
+# Function to display the permissions management menu
+display_permissions_menu() {
+    echo "Permissions Management"
+    echo "1. Change File Permissions (chmod)"
+    echo "2. Change File Ownership (chown)"
+    echo "3. Back to Main Menu"
+}
+# Function to change file permissions
+change_file_permissions() {
+    echo "Enter the name of the file to change permissions:"
+    read filename
+    echo "Enter the permission mode (e.g., 755):"
+    read permission_mode
+    chmod "$permission_mode" "$filename"
+    echo "Permissions for file $filename changed to $permission_mode successfully."
+}
+# Function to change file ownership
+change_file_ownership() {
+    echo "Enter the name of the file to change ownership:"
+    read filename
+    echo "Enter the new owner:"
+    read new_owner
+    echo "Enter the new group:"
+    read new_group
+    chown "$new_owner:$new_group" "$filename"
+    echo "Ownership for file $filename changed to $new_owner:$new_group successfully."
+}
 
 # Main function
 main() {
@@ -192,7 +220,19 @@ main() {
                     esac
                 done
                 ;;
-            4) echo "Exiting..."; exit ;;
+            4)
+		    while true; do
+                    display_permissions_menu
+                    read -p "Enter your choice: " permissions_choice
+                    case $permissions_choice in
+                        1) change_file_permissions ;;
+                        2) change_file_ownership ;;
+                        3) break ;;
+                        *) echo "Invalid choice. Please enter a valid option." ;;
+                    esac
+                done
+                ;;
+            5) echo "Exiting..."; exit ;;
             *) echo "Invalid choice. Please enter a valid option." ;;
         esac
     done
