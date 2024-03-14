@@ -7,7 +7,8 @@ display_main_menu() {
     echo "2. File Search"
     echo "3. System Monitoring"
     echo "4. Permissions Management"
-    echo "5. Exit"
+    echo "5. Backup and Restore"
+    echo "6. Exit"
 }
 
 # Function to display the file operations menu
@@ -172,6 +173,24 @@ change_file_ownership() {
     echo "Ownership for file $filename changed to $new_owner:$new_group successfully."
 }
 
+# Function to create a backup of files/directories
+backup_files() {
+    echo "Enter the name of the directory to backup:"
+    read source_dir
+    echo "Enter the name of the backup file:"
+    read backup_file
+    tar -czvf "$backup_file.tar.gz" "$source_dir"
+    echo "Backup of $source_dir created successfully as $backup_file.tar.gz."
+}
+# Function to restore files/directories from backup
+restore_files() {
+    echo "Enter the name of the backup file to restore:"
+    read backup_file
+    echo "Enter the directory to restore the backup to:"
+    read destination_dir
+    tar -xzvf "$backup_file.tar.gz" -C "$destination_dir"
+    echo "Backup $backup_file restored successfully to $destination_dir."
+}
 # Main function
 main() {
     while true; do
@@ -232,7 +251,19 @@ main() {
                     esac
                 done
                 ;;
-            5) echo "Exiting..."; exit ;;
+	5)
+		while true; do
+                    display_backup_restore_menu
+                    read -p "Enter your choice: " backup_restore_choice
+                    case $backup_restore_choice in
+                        1) backup_files ;;
+                        2) restore_files ;;
+                        3) break ;;
+                        *) echo "Invalid choice. Please enter a valid option." ;;
+                    esac
+                done
+                ;;
+            6) echo "Exiting..."; exit ;;
             *) echo "Invalid choice. Please enter a valid option." ;;
         esac
     done
