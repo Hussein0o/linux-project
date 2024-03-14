@@ -172,7 +172,14 @@ change_file_ownership() {
     chown "$new_owner:$new_group" "$filename"
     echo "Ownership for file $filename changed to $new_owner:$new_group successfully."
 }
-
+# Function to display the backup and restore menu
+display_backup_restore_menu() {
+    echo "Backup and Restore"
+    echo "Select an option:"
+    echo "1. Backup Files/Directories"
+    echo "2. Restore Files/Directories"
+    echo "3. Back to Main Menu"
+}
 # Function to create a backup of files/directories
 backup_files() {
     echo "Enter the name of the directory to backup:"
