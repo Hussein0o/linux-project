@@ -8,7 +8,8 @@ display_main_menu() {
     echo "3. System Monitoring"
     echo "4. Permissions Management"
     echo "5. Backup and Restore"
-    echo "6. Exit"
+    echo "6. Generate System Metrics Report"
+    echo "7. Exit"
 }
 
 # Function to display the file operations menu
@@ -198,6 +199,27 @@ restore_files() {
     tar -xzvf "$backup_file.tar.gz" -C "$destination_dir"
     echo "Backup $backup_file restored successfully to $destination_dir."
 }
+# Function to generate system metrics report
+generate_metrics_report() {
+    echo "Generating System Metrics Report..."
+    report_file="system_metrics_report_$(date +%Y-%m-%d_%H-%M-%S).txt"
+    {
+        echo "System Metrics Report"
+        echo "---------------------"
+        echo "System Information:"
+        uname -a
+        echo ""
+        echo "CPU Usage:"
+        top -bn1 | grep "Cpu(s)"
+        echo ""
+        echo "Memory Usage:"
+        free -m
+        echo ""
+        echo "Disk Space:"
+        df -h
+    } > "$report_file"
+    echo "System Metrics Report generated successfully and saved as $report_file"
+}
 # Main function
 main() {
     while true; do
@@ -270,7 +292,9 @@ main() {
                     esac
                 done
                 ;;
-            6) echo "Exiting..."; exit ;;
+	6)   generate_metrics_report ;;
+
+            7) echo "Exiting..."; exit ;;
             *) echo "Invalid choice. Please enter a valid option." ;;
         esac
     done
